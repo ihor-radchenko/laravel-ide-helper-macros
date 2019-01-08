@@ -1,9 +1,9 @@
 <?php
 
-namespace IhorRadchenko\IdeHelperMacros\Console;
+namespace IhorRadchenko\LaravelIdeHelperMacros\Console;
 
 use Barryvdh\Reflection\DocBlock;
-use IhorRadchenko\IdeHelperMacros\PackageTag;
+use IhorRadchenko\LaravelIdeHelperMacros\PackageTag;
 use Illuminate\Auth\RequestGuard;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Cache\Repository;

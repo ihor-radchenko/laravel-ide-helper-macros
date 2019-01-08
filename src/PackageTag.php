@@ -1,6 +1,6 @@
 <?php
 
-namespace IhorRadchenko\IdeHelperMacros;
+namespace IhorRadchenko\LaravelIdeHelperMacros;
 
 use Barryvdh\Reflection\DocBlock\Tag;
 

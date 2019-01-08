@@ -1,11 +1,10 @@
 <?php
 
-namespace IhorRadchenko\IdeHelperMacros;
+namespace IhorRadchenko\LaravelIdeHelperMacros;
 
 use Barryvdh\Reflection\DocBlock\Tag;
-use IhorRadchenko\IdeHelperMacros\Console\IdeHelperMacros;
-use Illuminate\Http\Response;
 use Illuminate\Support\ServiceProvider;
+use IhorRadchenko\LaravelIdeHelperMacros\Console\IdeHelperMacros;
 
 class IdeHelperMacrosServiceProvider extends ServiceProvider
 {
