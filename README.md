@@ -1,9 +1,9 @@
-#Laravel IDE Macros
+# Laravel IDE Macros
 
 It is advised to be used with [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper), which generates helper files for your IDE, so it'll be able to highlight and understand some Laravel-specific syntax.
 This package can generate phpDocs for Laravel classes, based on Macroable trait.
 
-##Installation
+## Installation
 
 Require this package with composer using the following command:
 
@@ -19,7 +19,7 @@ Run the following command to publish the configuration file to `config/ide-helpe
 php artisan vendor:publish --provider="IhorRadchenko\LaravelIdeHelperMacros\IdeHelperMacrosServiceProvider"
 ```
 
-##Automatic phpDoc generation for Laravel Macroable classes
+## Automatic phpDoc generation for Laravel Macroable classes
 
 You need add macro or mixin in some service provider, example:
 ```php
