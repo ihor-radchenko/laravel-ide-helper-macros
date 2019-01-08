@@ -1,3 +1,4 @@
+
 # Laravel IDE Macros
 
 It is advised to be used with [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper), which generates helper files for your IDE, so it'll be able to highlight and understand some Laravel-specific syntax.
