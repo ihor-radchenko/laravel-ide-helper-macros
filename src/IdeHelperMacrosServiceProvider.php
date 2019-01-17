@@ -21,7 +21,7 @@ class IdeHelperMacrosServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../config/ide-helper-macros.php' => config_path('ide-helper-macros.php')
-        ]);
+        ], 'config');
     }
 
     /**
