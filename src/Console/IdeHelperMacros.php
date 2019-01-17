@@ -202,7 +202,7 @@ class IdeHelperMacros extends Command
             if ($parameter->isVariadic()) {
                 $parameterString = '...' . $parameterString;
             } else {
-                $defaultValue = $parameter->isArray() ? '[]' : $parameter->getDefaultValue();
+                $defaultValue = $parameter->isArray() ? '[]' : ($parameter->getDefaultValue() ?? 'null');
                 $parameterString .= " = {$defaultValue}";
             }
         }
