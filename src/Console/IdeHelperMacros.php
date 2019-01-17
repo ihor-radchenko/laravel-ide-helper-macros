@@ -199,8 +199,12 @@ class IdeHelperMacros extends Command
         $parameterString = trim(optional($parameter->getType())->getName() . ' $' . $parameter->getName());
 
         if ($parameter->isOptional()) {
-            $defaultValue = $parameter->isArray() ? '[]' : $parameter->getDefaultValue();
-            $parameterString .= " = {$defaultValue}";
+            if ($parameter->isVariadic()) {
+                $parameterString = '...' . $parameterString;
+            } else {
+                $defaultValue = $parameter->isArray() ? '[]' : $parameter->getDefaultValue();
+                $parameterString .= " = {$defaultValue}";
+            }
         }
 
         return $parameterString;
