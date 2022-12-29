@@ -3,36 +3,10 @@
 namespace IhorRadchenko\LaravelIdeHelperMacros\Console;
 
 use Barryvdh\Reflection\DocBlock;
-use IhorRadchenko\LaravelIdeHelperMacros\PackageTag;
-use Illuminate\Auth\RequestGuard;
-use Illuminate\Auth\SessionGuard;
-use Illuminate\Cache\Repository;
 use Illuminate\Console\Command;
-use Illuminate\Console\Scheduling\Event;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Database\Eloquent\FactoryBuilder;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Console\PresetCommand;
-use Illuminate\Foundation\Testing\TestResponse;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Mail\Mailer;
-use Illuminate\Routing\Redirector;
-use Illuminate\Routing\ResponseFactory;
-use Illuminate\Routing\Route;
-use Illuminate\Routing\Router;
-use Illuminate\Routing\UrlGenerator;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Illuminate\Translation\Translator;
-use Illuminate\Validation\Rule;
+use IhorRadchenko\LaravelIdeHelperMacros\PackageTag;
 
 class IdeHelperMacros extends Command
 {
@@ -54,33 +28,32 @@ class IdeHelperMacros extends Command
      * @var array
      */
     protected $classes = [
-        Blueprint::class,
-        Arr::class,
-        Carbon::class,
-        Collection::class,
-        Event::class,
-        FactoryBuilder::class,
-        Filesystem::class,
-        Mailer::class,
-        PresetCommand::class,
-        Redirector::class,
-        Relation::class,
-        Repository::class,
-        ResponseFactory::class,
-        Route::class,
-        Router::class,
-        Rule::class,
-        Str::class,
-        TestResponse::class,
-        Translator::class,
-        UrlGenerator::class,
-        Builder::class,
-        JsonResponse::class,
-        RedirectResponse::class,
-        RequestGuard::class,
-        Response::class,
-        SessionGuard::class,
-        UploadedFile::class,
+        \Illuminate\Database\Schema\Blueprint::class,
+        \Illuminate\Support\Arr::class,
+        \Illuminate\Support\Carbon::class,
+        \Illuminate\Support\Collection::class,
+        \Illuminate\Console\Scheduling\Event::class,
+        \Illuminate\Filesystem\Filesystem::class,
+        \Illuminate\Mail\Mailer::class,
+        \Illuminate\Routing\Redirector::class,
+        \Illuminate\Database\Eloquent\Relations\Relation::class,
+        \Illuminate\Cache\Repository::class,
+        \Illuminate\Routing\ResponseFactory::class,
+        \Illuminate\Routing\Route::class,
+        \Illuminate\Routing\Router::class,
+        \Illuminate\Validation\Rule::class,
+        \Illuminate\Support\Str::class,
+        \Illuminate\Translation\Translator::class,
+        \Illuminate\Routing\UrlGenerator::class,
+        \Illuminate\Database\Query\Builder::class,
+        \Illuminate\Database\Eloquent\Builder::class,
+        \Illuminate\Http\JsonResponse::class,
+        \Illuminate\Http\RedirectResponse::class,
+        \Illuminate\Auth\RequestGuard::class,
+        \Illuminate\Http\Response::class,
+        \Illuminate\Auth\SessionGuard::class,
+        \Illuminate\Http\UploadedFile::class,
+        \Illuminate\Support\Stringable::class,
     ];
 
     /**
@@ -113,19 +86,21 @@ class IdeHelperMacros extends Command
         $classes = array_merge($this->classes, config('ide-helper.macroable', []));
 
         foreach ($classes as $class) {
-            if (! class_exists($class)) {
+            if (!class_exists($class)) {
                 continue;
             }
 
             $reflection = new \ReflectionClass($class);
-            if (! $reflection->hasProperty('macros')) {
+
+            if (!$reflection->hasProperty('macros')) {
                 continue;
             }
 
             $originalDoc = $reflection->getDocComment();
             $fileName = $reflection->getFileName();
             $className = $reflection->getShortName();
-            if (! $fileName) {
+
+            if (!$fileName) {
                 continue;
             }
 
@@ -135,12 +110,12 @@ class IdeHelperMacros extends Command
             $phpDoc = new DocBlock($reflection, new DocBlock\Context($reflection->getNamespaceName()));
             $phpDoc->setText($class);
 
-            if (! $macros) {
+            if (!$macros) {
                 if ($originalDoc && $phpDoc->hasTag('package')) {
                     foreach ($phpDoc->getTagsByName('package') as $tag) {
                         if ($tag instanceof PackageTag && $tag->getContent() === 'ide_helper_macros') {
                             $contents = $this->files->get($fileName);
-                            $contents = str_replace_first($originalDoc, '', $contents);
+                            $contents = $this->strReplaceFirst($originalDoc, '', $contents);
                             $this->files->put($fileName, $contents);
                             $this->info('Remove phpDocBlock from ' . $fileName);
 
@@ -168,7 +143,7 @@ class IdeHelperMacros extends Command
             }
             $phpDoc->appendTag(DocBlock\Tag::createInstance('@package ide_helper_macros'));
 
-            $serializer = new DocBlock\Serializer;
+            $serializer = new DocBlock\Serializer();
             $serializer->getDocComment($phpDoc);
             $docComment = $serializer->getDocComment($phpDoc);
             $contents = $this->files->get($fileName);
@@ -208,5 +183,14 @@ class IdeHelperMacros extends Command
         }
 
         return $parameterString;
+    }
+
+    protected function strReplaceFirst($needle, $replace, $haystack): array|string
+    {
+        $pos = strpos($haystack, $needle);
+        if ($pos !== false) {
+            return substr_replace($haystack, $replace, $pos, strlen($needle));
+        }
+        return $haystack;
     }
 }
